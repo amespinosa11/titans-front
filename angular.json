@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist",
+            "outputPath": "dist/titans-front",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -131,10 +131,10 @@
       }
     }
   },
-  "defaultProject": "argon-dashboard-angular",
   "schematics": {
     "@schematics/angular:component": {
       "styleext": "scss"
     }
-  }
+  },
+  "defaultProject": "dist/titans-front"
 }
