@@ -15,6 +15,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 // import { ToastrModule } from 'ngx-toastr';
 import {MatDialogModule, MatIconModule} from '@angular/material';
 import { EstrategiaDialogComponent } from 'src/app/pages/estrategia-dialog/estrategia-dialog.component';
+import { ProgresoEstrategiaComponent } from 'src/app/pages/progreso-estrategia/progreso-estrategia.component';
+import { ResultadosPruebaComponent } from 'src/app/pages/resultados-prueba/resultados-prueba.component';
 
 const materialImports = [
   MatDialogModule,
@@ -37,7 +39,9 @@ const materialImports = [
     TablesComponent,
     IconsComponent,
     MapsComponent,
-    EstrategiaDialogComponent
+    EstrategiaDialogComponent,
+    ProgresoEstrategiaComponent,
+    ResultadosPruebaComponent
   ],
   exports: [
     ...materialImports,

@@ -27,7 +27,7 @@ export class DashboardComponent implements OnInit {
       width: '900vw',
       height: '150vw',
       maxWidth: '100%',
-      data: {name: 'Ejemplo'}
+      data: [0,1]
     });
 
     dialogRef.afterClosed().subscribe(result => {

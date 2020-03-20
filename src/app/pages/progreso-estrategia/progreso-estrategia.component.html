@@ -1,0 +1,45 @@
+<div class="header bg-gradient-danger pb-8 pt-3 pt-md-3">
+  <h1>Progreso estrategía "NOMBRE"</h1>
+</div>
+
+<div class="container-fluid mt--7">
+  <div class="card bg-secondary shadow">
+    <div class="card-header bg-transparent">
+      <h3 class="mb-0">E2E Cypress</h3>
+    </div>
+    <div>
+
+      <!--Tabla -->
+      <div class="table-responsive">
+        <table class="table align-items-center table-flush">
+          <thead class="thead-light">
+            <tr>
+              <th scope="col">Script</th>
+              <th scope="col">Ejecuciones</th>
+              <th scope="col">Estado</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let prueba of pruebas">
+              <th scope="row">
+                {{prueba.script}}
+              </th>
+              <th scope="row">
+                {{prueba.cantidadEjecuciones}}
+              </th>
+              <th scope="row">
+                {{prueba.estado}}
+              </th>
+              <td>
+                <a *ngIf="prueba.finalizado" class="btn btn-default btn-sm" routerLink="/resumen/1">Ver resultados</a>
+                <a *ngIf="!prueba.finalizado" class="btn btn-default btn-sm" disabled>Ver resultados</a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>
