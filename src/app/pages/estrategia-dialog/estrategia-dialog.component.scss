@@ -2,11 +2,23 @@
     background-color: #f8f9fe;
     width: 100%;
     height: 100%;
-    padding: 5%;
+    padding: 2%;
+    display: flex;
+    flex-direction: column;
+}
+
+.estrategia-header-container {
+    width: 100%;
+    text-align: end;
+}
+
+.estrategia-body-container {
+    padding: 3%;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
     align-items: center;
+    height: 90vh;
 }
 
 .card {
@@ -23,4 +35,12 @@
 .btns-container {
     width: 94%;
     text-align: end;
+}
+
+.clickable-icon {
+    cursor: pointer;
+}
+
+.clickable-icon:hover {
+    color: #f56036;
 }

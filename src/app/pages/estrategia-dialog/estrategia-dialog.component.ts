@@ -17,7 +17,7 @@ export class EstrategiaDialogComponent implements OnInit {
     console.log('ESTE ES EL CONTENIDO QUE VIENE : ', this.data);
   }
 
-  onNoClick(): void {
+  close(): void {
     this.dialogRef.close();
   }
 

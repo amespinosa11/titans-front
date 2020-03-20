@@ -13,11 +13,12 @@ import { UserProfileComponent } from '../../pages/user-profile/user-profile.comp
 import { TablesComponent } from '../../pages/tables/tables.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 // import { ToastrModule } from 'ngx-toastr';
-import {MatDialogModule} from '@angular/material';
+import {MatDialogModule, MatIconModule} from '@angular/material';
 import { EstrategiaDialogComponent } from 'src/app/pages/estrategia-dialog/estrategia-dialog.component';
 
 const materialImports = [
-  MatDialogModule
+  MatDialogModule,
+  MatIconModule
 ]
 
 @NgModule({

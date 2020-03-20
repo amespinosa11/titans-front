@@ -1,16 +1,23 @@
 <div class="estrategia-dialog-container">
-  <div class="row">
-    <div class="col-xl-12 order-xl-1">
-      <div class="card bg-secondary shadow">
-        <!-- Nombre de la estrategia -->
-        <div class="form-group">
-          <label class="form-control-label" for="input-name">Nombre Estrategía</label>
-          <input type="text" id="input-name" class="form-control form-control-alternative">
+  <div>
+    <div class="estrategia-header-container">
+      <mat-icon (click)="close()" class="clickable-icon">clear</mat-icon>
+    </div>
+    <div class="estrategia-body-container">
+      <div class="row">
+        <div class="col-xl-12 order-xl-1">
+          <div class="card bg-secondary shadow">
+            <!-- Nombre de la estrategia -->
+            <div class="form-group">
+              <label class="form-control-label" for="input-name">Nombre Estrategía</label>
+              <input type="text" id="input-name" class="form-control form-control-alternative">
+            </div>
+          </div>
         </div>
       </div>
+      <div class="btns-container">
+        <button type="button" class="btn btn-default">Siguiente</button>
+      </div>
     </div>
-  </div>
-  <div class="btns-container">
-    <button type="button" class="btn btn-default">Siguiente</button>
   </div>
 </div>
