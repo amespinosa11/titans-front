@@ -13,6 +13,12 @@ import { UserProfileComponent } from '../../pages/user-profile/user-profile.comp
 import { TablesComponent } from '../../pages/tables/tables.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 // import { ToastrModule } from 'ngx-toastr';
+import {MatDialogModule} from '@angular/material';
+import { EstrategiaDialogComponent } from 'src/app/pages/estrategia-dialog/estrategia-dialog.component';
+
+const materialImports = [
+  MatDialogModule
+]
 
 @NgModule({
   imports: [
@@ -21,15 +27,23 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     FormsModule,
     HttpClientModule,
     NgbModule,
-    ClipboardModule
+    ClipboardModule,
+    ...materialImports,
   ],
   declarations: [
     DashboardComponent,
     UserProfileComponent,
     TablesComponent,
     IconsComponent,
-    MapsComponent
-  ]
+    MapsComponent,
+    EstrategiaDialogComponent
+  ],
+  exports: [
+    ...materialImports,
+  ],
+  entryComponents: [
+    EstrategiaDialogComponent
+  ],
 })
 
 export class AdminLayoutModule {}
