@@ -7,3 +7,14 @@
     background-color: transparent;
     border-radius: 30px;
 }
+
+.create-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 2%;
+}
+
+#create-icon {
+    margin-right: 3.5%;
+}
