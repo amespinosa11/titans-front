@@ -4,19 +4,189 @@
       <mat-icon (click)="close()" class="clickable-icon">clear</mat-icon>
     </div>
     <div class="estrategia-body-container">
-      <div class="row">
+      <div *ngIf="!show" class="row">
         <div class="col-xl-12 order-xl-1">
           <div class="card bg-secondary shadow">
-            <!-- Nombre de la estrategia -->
-            <div class="form-group">
-              <label class="form-control-label" for="input-name">Nombre Estrategía</label>
-              <input type="text" id="input-name" class="form-control form-control-alternative">
-            </div>
+            <form class="ng-untouched ng-pristine ng-valid">
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="form-group">
+                    <label class="form-control-label" for="input-name">Nombre Estrategía</label>
+                    <input type="text" id="input-name" class="form-control form-control-alternative" required>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="input-name">Aplicación</label>
+                    <select class="form-control form-control-alternative" id="app" [(ngModel)]="selectedApp" name="app"
+                      required>
+                      <option *ngFor="let app of apps" [value]="app">{{app.name}}</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="input-name">Versión</label>
+                    <select class="form-control form-control-alternative" id="version" required>
+                      <option *ngFor="let version of versionsWeb" [value]="version">{{version.id}}</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="input-name">Tipo(s) de prueba</label>
+                    <div *ngFor="let type of testTypes" class="custom-control custom-checkbox mb-3">
+                      <input class="custom-control-input" id="{{type}}" type="checkbox" value="type">
+                      <label class="custom-control-label" for="{{type}}">{{type}}</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="input-name">Herramienta(s)</label>
+                    <div *ngFor="let tool of tools" class="custom-control custom-checkbox mb-3">
+                      <input class="custom-control-input" id="{{tool}}" type="checkbox" value="tool">
+                      <label class="custom-control-label" for="{{tool}}">{{tool}}</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="btns-container">
+                  <button type="button" class="btn btn-default" (click)="openSections()">Siguiente</button>
+                </div>
+              </div>
+            </form>
           </div>
         </div>
       </div>
-      <div class="btns-container">
-        <button type="button" class="btn btn-default">Siguiente</button>
+
+      <div *ngIf="show" class="row">
+        <div class="card shadow mb-5" *ngFor="let section of sections">
+          <div class="card-header border-0">
+            <h3 class="mb-0">{{section}}</h3>
+          </div>
+          <div>
+
+            <!--Tabla -->
+            <div class="table-responsive">
+              <table class="table align-items-center table-flush">
+                <thead class="thead-light">
+                  <tr>
+                    <th scope="col"></th>
+                    <th scope="col">Script</th>
+                    <th scope="col">Cant. ejecuciones</th>
+                    <th scope="col"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let script of scripts">
+                    <td>
+                      <div class="custom-control custom-checkbox mb-3">
+                        <input class="custom-control-input" id="{{script.id}}" type="checkbox" value="script">
+                        <label class="custom-control-label" for="{{script.id}}"></label>
+                      </div>
+                    </td>
+                    <th scope="row">
+                      {{script.name}}
+                    </th>
+                    <th scope="row">
+                      {{script.cant}}
+                    </th>
+                    <td>
+                      <a href=""><img src="https://img.icons8.com/cotton/64/000000/edit--v2.png"
+                          style="height: 30%;" /></a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>            
+            <div class="align-self-end mt-2 mr-6 ml-auto">
+              <button type="button" class="btn btn-default btn-sm" (click)="openScriptModal()">Agregar script</button>
+            </div>            
+            <div class="container mt-7 ml-3 mb-5">
+              <div class="custom-control custom-radio mb-3 col-lg-2">
+                <input name="custom-radio-2" class="custom-control-input" id="headful" type="radio" checked="">
+                <label class="custom-control-label" for="headful">Headful</label>
+              </div>
+              <div class="custom-control custom-radio mb-3 col-lg-2">
+                <input name="custom-radio-2" class="custom-control-input" id="headless" type="radio">
+                <label class="custom-control-label" for="headless">Headless</label>
+              </div>
+            </div>
+
+            <!--Matriz -->
+            <div class="table-responsive">
+              <table class="table align-items-center table-flush">
+                <thead class="thead-light">
+                  <tr>
+                    <th scope="col"></th>
+                    <th scope="col">1024×768</th>
+                    <th scope="col">1280×1024</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">
+                      Chrome
+                    </th>
+                    <td>
+                      <div class="custom-control custom-checkbox mb-3">
+                        <input class="custom-control-input" id="resolucionChrome1" type="checkbox" value="script">
+                        <label class="custom-control-label" for="resolucionChrome1"></label>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="custom-control custom-checkbox mb-3">
+                        <input class="custom-control-input" id="resolucionChrome2" type="checkbox" value="script">
+                        <label class="custom-control-label" for="resolucionChrome2"></label>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row">
+                      Firefox
+                    </th>
+                    <td>
+                      <div class="custom-control custom-checkbox mb-3">
+                        <input class="custom-control-input" id="resolucionFirefox1" type="checkbox" value="script">
+                        <label class="custom-control-label" for="resolucionFirefox1"></label>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="custom-control custom-checkbox mb-3">
+                        <input class="custom-control-input" id="resolucionFirefox2" type="checkbox" value="script">
+                        <label class="custom-control-label" for="resolucionFirefox2"></label>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row">
+                      Internet Explorer
+                    </th>
+                    <td>
+                      <div class="custom-control custom-checkbox mb-3">
+                        <input class="custom-control-input" id="resolucionExplorer1" type="checkbox" value="script">
+                        <label class="custom-control-label" for="resolucionExplorer1"></label>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="custom-control custom-checkbox mb-3">
+                        <input class="custom-control-input" id="resolucionExplorer2" type="checkbox" value="script">
+                        <label class="custom-control-label" for="resolucionExplorer2"></label>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
       </div>
     </div>
   </div>

@@ -18,11 +18,10 @@
     flex-direction: column;
     justify-content: space-evenly;
     align-items: center;
-    height: 90vh;
+    height: 80%;
 }
 
 .card {
-    min-height: 50%;
     padding: 3.5%;
     width: 100%;
 }
@@ -43,4 +42,8 @@
 
 .clickable-icon:hover {
     color: #f56036;
+}
+
+.btn-sm {
+    float:right;
 }
