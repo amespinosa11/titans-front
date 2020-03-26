@@ -10,16 +10,30 @@ import { DashboardComponent } from '../dashboard/dashboard.component';
 export class EstrategiaDialogComponent implements OnInit {
 
   show: boolean = false;
+  selectedApp = '';
+  selectedVersion = '';
+  radioHeadful= 'headful';
   apps = [
     {id: 'habweb', name: 'Habitica Web'},
     {id: 'habmov', name: 'Habitica Móvil'}
   ];
-  versionsWeb: [{id: '8.5'},{id: '9.0'}];
-  versionsMovil: [{id: 'beta'},{id: 'alpha'}];
-  testTypes = ['E2E', 'Random', 'BDT'];
-  tools = ['Cypress', 'Puppeteer', 'Cucumber', 'Calabash'];
-  testTypesChecked = ['E2E', 'Random', 'BDT'];
-  toolsChecked = ['Cypress', 'Puppeteer', 'Cucumber', 'Calabash'];
+  versions: Object = {
+    'habweb': ['8.5', '9.0'],
+    'habmov': ['beta', 'alpha']
+  };
+  testTypes = [
+    {id: 'E2E', isSelected: false},
+    {id: 'Random', isSelected: false},
+    {id: 'BDT', isSelected: false}
+  ];
+  tools = [
+    {id: 'Cypress', isSelected: false, isDisabled: true},
+    {id: 'Puppeteer', isSelected: false, isDisabled: true},
+    {id: 'Cucumber', isSelected: false, isDisabled: true},
+    {id: 'Calabash', isSelected: false, isDisabled: true}
+  ];
+  testTypesChecked = [];
+  toolsChecked = [];
   sections = [];
   scripts = [
     {id:1, name: 'Prueba login', cant: '30'},
@@ -42,33 +56,63 @@ export class EstrategiaDialogComponent implements OnInit {
   openSections(): void {
     this.show = true;
     let section = '';
-    for (let i = 0; i < this.testTypesChecked.length; i++) {
-      if (this.testTypesChecked[i] == 'E2E') {
-        for (let j = 0; j < this.toolsChecked.length; j++) {
-          if (this.toolsChecked[j] == 'Cypress' || this.toolsChecked[j] == 'Puppeteer') {
-            section = this.testTypesChecked[i] + '-' + this.toolsChecked[j];
-            this.sections.push(section);
-          }
-        }
-      }
-      if (this.testTypesChecked[i] == 'Random') {
-        section = this.testTypesChecked[i];
-        this.sections.push(section);
-      }
-      if (this.testTypesChecked[i] == 'BDT') {
-        for (let j = 0; j < this.toolsChecked.length; j++) {
-          if (this.toolsChecked[j] == 'Cucumber' || this.toolsChecked[j] == 'Calabash') {
-            section = this.testTypesChecked[i] + '-' + this.toolsChecked[j];
-            this.sections.push(section);
-          }
-        }
-      }
+
+    // E2E
+    const indexE2E = this.testTypesChecked.findIndex(x => x == 'E2E');
+    const indexCypress = this.toolsChecked.findIndex(x => x == 'Cypress');
+    const indexPuppeteer = this.toolsChecked.findIndex(x => x == 'Puppeteer');
+    if (indexE2E != -1 && indexCypress != -1) {
+      section = this.testTypesChecked[indexE2E] + '-' + this.toolsChecked[indexCypress];
+      this.sections.push(section);
+    }
+    if (indexE2E != -1 && indexPuppeteer != -1) {
+      section = this.testTypesChecked[indexE2E] + '-' + this.toolsChecked[indexPuppeteer];
+      this.sections.push(section);
+    }
+
+    //RANDOM
+    const indexRandom = this.testTypesChecked.findIndex(x => x == 'Random');
+    if (indexRandom != -1) {
+      this.sections.push(this.testTypesChecked[indexRandom]);
+    }
+
+    //BDT
+    const indexBDT = this.testTypesChecked.findIndex(x => x == 'BDT');
+    const indexCucumber = this.toolsChecked.findIndex(x => x == 'Cucumber');
+    const indexCalabash = this.toolsChecked.findIndex(x => x == 'Calabash');
+    if (indexBDT != -1 && indexCucumber != -1) {
+      section = this.testTypesChecked[indexBDT] + '-' + this.toolsChecked[indexCucumber];
+      this.sections.push(section);
+    }
+    if (indexBDT != -1 && indexCalabash != -1) {
+      section = this.testTypesChecked[indexBDT] + '-' + this.toolsChecked[indexCalabash];
+      this.sections.push(section);
     }
     console.log("CONTENIDO DE LAS SECCIONES"+ JSON.stringify(this.sections));
   }
 
-  openScriptModal(){
-    
+  setTypesChecked(type): void{
+    const index = this.testTypes.findIndex(x => x.id == type.id);
+    this.testTypes[index].isSelected = type.isSelected;
+
+    const indexNewArray = this.testTypesChecked.findIndex(x => x == type.id);
+    if (indexNewArray != -1 && !type.isSelected) {
+      this.testTypesChecked.splice(indexNewArray, 1);
+    } else {
+      this.testTypesChecked.push(type.id);
+    }    
+  }
+
+  setToolsChecked(tool): void{
+    const index = this.tools.findIndex(x => x.id == tool.id);
+    this.tools[index].isSelected = tool.isSelected;
+
+    const indexNewArray = this.toolsChecked.findIndex(x => x == tool.id);
+    if (indexNewArray != -1 && !tool.isSelected) {
+      this.toolsChecked.splice(indexNewArray, 1);
+    } else {
+      this.toolsChecked.push(tool.id);
+    }    
   }
 
 }

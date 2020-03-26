@@ -22,15 +22,17 @@
                     <label class="form-control-label" for="input-name">Aplicación</label>
                     <select class="form-control form-control-alternative" id="app" [(ngModel)]="selectedApp" name="app"
                       required>
-                      <option *ngFor="let app of apps" [value]="app">{{app.name}}</option>
+                      <option value="" [selected]=true [disabled]="true">Selecciona una aplicación</option>
+                      <option *ngFor="let app of apps" [value]="app.id">{{app.name}}</option>
                     </select>
                   </div>
                 </div>
                 <div class="col-lg-6">
                   <div class="form-group">
                     <label class="form-control-label" for="input-name">Versión</label>
-                    <select class="form-control form-control-alternative" id="version" required>
-                      <option *ngFor="let version of versionsWeb" [value]="version">{{version.id}}</option>
+                    <select class="form-control form-control-alternative" id="version" [(ngModel)]="selectedVersion" name="version" [disabled]="selectedApp == ''" required>
+                      <option value="" [selected]=true [disabled]="true">Selecciona una version</option>
+                      <option *ngFor="let version of versions[selectedApp]" [value]="version">{{version}}</option>
                     </select>
                   </div>
                 </div>
@@ -40,8 +42,8 @@
                   <div class="form-group">
                     <label class="form-control-label" for="input-name">Tipo(s) de prueba</label>
                     <div *ngFor="let type of testTypes" class="custom-control custom-checkbox mb-3">
-                      <input class="custom-control-input" id="{{type}}" type="checkbox" value="type">
-                      <label class="custom-control-label" for="{{type}}">{{type}}</label>
+                      <input class="custom-control-input" id="{{type.id}}" type="checkbox" value="type" [(ngModel)]="type.isSelected" name="type" (change)="setTypesChecked(type)">
+                      <label class="custom-control-label" for="{{type.id}}">{{type.id}}</label>
                     </div>
                   </div>
                 </div>
@@ -49,8 +51,8 @@
                   <div class="form-group">
                     <label class="form-control-label" for="input-name">Herramienta(s)</label>
                     <div *ngFor="let tool of tools" class="custom-control custom-checkbox mb-3">
-                      <input class="custom-control-input" id="{{tool}}" type="checkbox" value="tool">
-                      <label class="custom-control-label" for="{{tool}}">{{tool}}</label>
+                      <input class="custom-control-input" id="{{tool.id}}" type="checkbox" value="tool" [(ngModel)]="tool.isSelected" name="tool" (change)="setToolsChecked(tool)">
+                      <label class="custom-control-label" for="{{tool.id}}">{{tool.id}}</label>
                     </div>
                   </div>
                 </div>
