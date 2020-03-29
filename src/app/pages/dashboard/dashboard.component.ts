@@ -10,6 +10,7 @@ import {
 } from "../../variables/charts";
 import { MatDialog } from '@angular/material';
 import { EstrategiaDialogComponent } from '../estrategia-dialog/estrategia-dialog.component';
+import { DashboardService } from 'src/app/services/dashboard/dashboard.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -18,9 +19,27 @@ import { EstrategiaDialogComponent } from '../estrategia-dialog/estrategia-dialo
 })
 export class DashboardComponent implements OnInit {
 
-  constructor(public estrategiaDialog: MatDialog) { }
+  estadisticas: any;
 
-  ngOnInit() {}
+  constructor(public estrategiaDialog: MatDialog, private dashboardService: DashboardService) {
+    this.estadisticas = {
+      totales: 1,
+      pendientes: 1,
+      enCola: 0,
+      enEjecucion: 0,
+      fallidas: 0,
+      satisfactorias: 0
+    }
+  }
+
+  ngOnInit() {
+    this.dashboardService.obtenerEstadisticas()
+      .subscribe( (estadisticas:any) => {
+        if(estadisticas.code === 200) {
+          this.estadisticas = estadisticas.data;
+        }
+      })
+  }
 
   openDialog(): void {
     const dialogRef = this.estrategiaDialog.open(EstrategiaDialogComponent, {
