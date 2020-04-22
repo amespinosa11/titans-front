@@ -17,6 +17,7 @@ import {MatDialogModule, MatIconModule} from '@angular/material';
 import { EstrategiaDialogComponent } from 'src/app/pages/estrategia-dialog/estrategia-dialog.component';
 import { ProgresoEstrategiaComponent } from 'src/app/pages/progreso-estrategia/progreso-estrategia.component';
 import { ResultadosPruebaComponent } from 'src/app/pages/resultados-prueba/resultados-prueba.component';
+import { AgregarScriptDialogComponent } from 'src/app/pages/agregar-script-dialog/agregar-script-dialog.component';
 
 const materialImports = [
   MatDialogModule,
@@ -31,6 +32,7 @@ const materialImports = [
     HttpClientModule,
     NgbModule,
     ClipboardModule,
+    RouterModule,
     ...materialImports,
   ],
   declarations: [
@@ -41,13 +43,15 @@ const materialImports = [
     MapsComponent,
     EstrategiaDialogComponent,
     ProgresoEstrategiaComponent,
-    ResultadosPruebaComponent
+    ResultadosPruebaComponent,
+    AgregarScriptDialogComponent
   ],
   exports: [
     ...materialImports,
   ],
   entryComponents: [
-    EstrategiaDialogComponent
+    EstrategiaDialogComponent,
+    AgregarScriptDialogComponent
   ],
 })
 

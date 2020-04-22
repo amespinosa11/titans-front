@@ -11,17 +11,17 @@
               <div class="row">
                 <div class="col-lg-12">
                   <div class="form-group">
-                    <label class="form-control-label" for="input-name">Nombre Estrategía</label>
-                    <input type="text" id="input-name" class="form-control form-control-alternative" required>
+                    <label class="form-control-label" for="input-name">Nombre Estrategía *</label>
+                    <input type="text" id="input-name" name="input-name" class="form-control form-control-alternative" [(ngModel)]="nombreEstartegia" (keyup)="verificarContenido1()">
                   </div>
                 </div>
               </div>
               <div class="row">
                 <div class="col-lg-6">
                   <div class="form-group">
-                    <label class="form-control-label" for="input-name">Aplicación</label>
+                    <label class="form-control-label" for="app">Aplicación</label>
                     <select class="form-control form-control-alternative" id="app" [(ngModel)]="selectedApp" name="app"
-                      required>
+                      required (ngModelChange)="verificarContenido1()">
                       <option value="" [selected]=true [disabled]="true">Selecciona una aplicación</option>
                       <option *ngFor="let app of apps" [value]="app.id">{{app.name}}</option>
                     </select>
@@ -29,8 +29,9 @@
                 </div>
                 <div class="col-lg-6">
                   <div class="form-group">
-                    <label class="form-control-label" for="input-name">Versión</label>
-                    <select class="form-control form-control-alternative" id="version" [(ngModel)]="selectedVersion" name="version" [disabled]="selectedApp == ''" required>
+                    <label class="form-control-label" for="version">Versión</label>
+                    <select class="form-control form-control-alternative" id="version" [(ngModel)]="selectedVersion" name="version" [disabled]="selectedApp == ''" 
+                    required (ngModelChange)="verificarContenido1()">
                       <option value="" [selected]=true [disabled]="true">Selecciona una version</option>
                       <option *ngFor="let version of versions[selectedApp]" [value]="version">{{version}}</option>
                     </select>
@@ -40,7 +41,7 @@
               <div class="row">
                 <div class="col-lg-6">
                   <div class="form-group">
-                    <label class="form-control-label" for="input-name">Tipo(s) de prueba</label>
+                    <label class="form-control-label">Tipo(s) de prueba</label>
                     <div *ngFor="let type of testTypes" class="custom-control custom-checkbox mb-3">
                       <input class="custom-control-input" id="{{type.id}}" type="checkbox" value="type" [(ngModel)]="type.isSelected" name="type" (change)="setTypesChecked(type)">
                       <label class="custom-control-label" for="{{type.id}}">{{type.id}}</label>
@@ -49,7 +50,7 @@
                 </div>
                 <div class="col-lg-6">
                   <div class="form-group">
-                    <label class="form-control-label" for="input-name">Herramienta(s)</label>
+                    <label class="form-control-label">Herramienta(s)</label>
                     <div *ngFor="let tool of tools" class="custom-control custom-checkbox mb-3">
                       <input class="custom-control-input" id="{{tool.id}}" type="checkbox" value="tool" [(ngModel)]="tool.isSelected" name="tool" (change)="setToolsChecked(tool)">
                       <label class="custom-control-label" for="{{tool.id}}">{{tool.id}}</label>
@@ -59,7 +60,8 @@
               </div>
               <div class="row">
                 <div class="btns-container">
-                  <button type="button" class="btn btn-default" (click)="openSections()">Siguiente</button>
+                  <button *ngIf="contenido1Valido" type="button" class="btn btn-default" (click)="openSections()">Siguiente</button>
+                  <button *ngIf="!contenido1Valido" type="button" class="btn btn-default" disabled>Siguiente</button>
                 </div>
               </div>
             </form>
@@ -69,8 +71,9 @@
 
       <div *ngIf="show" class="row">
         <div class="card shadow mb-5" *ngFor="let section of sections">
-          <div class="card-header border-0">
+          <div class="card-header border-0 d-flex justify-content-between">
             <h3 class="mb-0">{{section}}</h3>
+            <button class="btn btn-danger">Eliminar</button>
           </div>
           <div>
 
@@ -82,27 +85,22 @@
                     <th scope="col"></th>
                     <th scope="col">Script</th>
                     <th scope="col">Cant. ejecuciones</th>
-                    <th scope="col"></th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let script of scripts">
+                  <tr *ngFor="let script of scripts; let i = index">
                     <td>
                       <div class="custom-control custom-checkbox mb-3">
-                        <input class="custom-control-input" id="{{script.id}}" type="checkbox" value="script">
-                        <label class="custom-control-label" for="{{script.id}}"></label>
+                        <input class="custom-control-input" id="{{i}}" type="checkbox" value="script">
+                        <label class="custom-control-label" for="{{i}}"></label>
                       </div>
                     </td>
                     <th scope="row">
-                      {{script.name}}
+                      {{script.descripcion}}
                     </th>
                     <th scope="row">
-                      {{script.cant}}
+                      <input type="number" [value]="script.cant_ejecuciones">
                     </th>
-                    <td>
-                      <a href=""><img src="https://img.icons8.com/cotton/64/000000/edit--v2.png"
-                          style="height: 30%;" /></a>
-                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -112,11 +110,11 @@
             </div>            
             <div class="container mt-7 ml-3 mb-5">
               <div class="custom-control custom-radio mb-3 col-lg-2">
-                <input name="custom-radio-2" class="custom-control-input" id="headful" type="radio" checked="">
+                <input name="custom-radio-2" class="custom-control-input" id="headful" value="Headful" type="radio" checked="" (change)="seleccionarTipo($event)">
                 <label class="custom-control-label" for="headful">Headful</label>
               </div>
               <div class="custom-control custom-radio mb-3 col-lg-2">
-                <input name="custom-radio-2" class="custom-control-input" id="headless" type="radio">
+                <input name="custom-radio-2" class="custom-control-input" id="headless" value="Headless" type="radio" (change)="seleccionarTipo($event)">
                 <label class="custom-control-label" for="headless">Headless</label>
               </div>
             </div>
@@ -190,7 +188,7 @@
           </div>
         </div>
         <div class="container">
-          <button type="button" class="btn btn-default btn-lg btn-block">Lanzar pruebas</button>
+          <button type="button" class="btn btn-default btn-lg btn-block" (click)="guardarPrueba()">Lanzar pruebas</button>
         </div>
       </div>
     </div>    

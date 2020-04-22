@@ -1,0 +1,19 @@
+<div class="agregar-script-container">
+  <div class="estrategia-header-container">
+      <mat-icon (click)="close()" class="clickable-icon">clear</mat-icon>
+  </div>
+  <div>
+    <div class="form-group">
+      <label>Cantidad ejecuciones</label>
+      <input type="number" class="form-control form-control-alternative" [(ngModel)]="scriptData.cantEjecuciones">
+    </div>
+    <div class="form-group">
+      <label>Script</label>
+      <input type="file" accept=".js" class="form-control form-control-alternative" (change)="onFileChange($event)">
+    </div>
+  </div>
+  <div class="btn-container">
+    <button class="btn btn-danger" (click)="cerrar()">Cancelar</button>
+    <button class="btn btn-success" [mat-dialog-close]="scriptData">Aceptar</button>
+  </div>
+</div>
