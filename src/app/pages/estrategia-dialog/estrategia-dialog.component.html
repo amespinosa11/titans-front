@@ -91,7 +91,7 @@
                   <tr *ngFor="let script of section.scripts; let i = index">
                     <td>
                       <div class="custom-control custom-checkbox mb-3">
-                        <input class="custom-control-input" id="{{i}}" type="checkbox" value="script">
+                        <input class="custom-control-input" id="{{i}}" type="checkbox" value="script" (change)="setScriptsChecked(script)">
                         <label class="custom-control-label" for="{{i}}"></label>
                       </div>
                     </td>
@@ -161,23 +161,6 @@
                       <div class="custom-control custom-checkbox mb-3">
                         <input class="custom-control-input" id="resolucionFirefox2" type="checkbox" value="script">
                         <label class="custom-control-label" for="resolucionFirefox2"></label>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th scope="row">
-                      Internet Explorer
-                    </th>
-                    <td>
-                      <div class="custom-control custom-checkbox mb-3">
-                        <input class="custom-control-input" id="resolucionExplorer1" type="checkbox" value="script">
-                        <label class="custom-control-label" for="resolucionExplorer1"></label>
-                      </div>
-                    </td>
-                    <td>
-                      <div class="custom-control custom-checkbox mb-3">
-                        <input class="custom-control-input" id="resolucionExplorer2" type="checkbox" value="script">
-                        <label class="custom-control-label" for="resolucionExplorer2"></label>
                       </div>
                     </td>
                   </tr>

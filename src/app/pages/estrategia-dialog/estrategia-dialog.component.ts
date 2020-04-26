@@ -6,6 +6,7 @@ import { Script } from 'src/app/models/script.model';
 import { EstrategiaEnvio, MatrizPrueba, Estrategia, Prueba } from 'src/app/models/estrategia.model';
 import { EstrategiaService } from 'src/app/services/estrategia/estrategia.service';
 import { Router } from '@angular/router';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-estrategia-dialog',
@@ -17,7 +18,7 @@ export class EstrategiaDialogComponent implements OnInit {
   contenido1Valido = false;
   nombreEstartegia = '';
   show: boolean = false;
-  selectedApp = 0;
+  selectedApp = 0; // Este se utiliza para obtener la aplicacion
   selectedVersion = '';
   radioHeadful = 'headful';
   apps = [];
@@ -30,7 +31,7 @@ export class EstrategiaDialogComponent implements OnInit {
   scripts = [];
   matriz = [];
 
-  scriptsDefinitivos: Script[] = [];
+  scriptsDefinitivos = {};
 
   tipoSeleccionado = 'Headful';
 
@@ -52,7 +53,10 @@ export class EstrategiaDialogComponent implements OnInit {
     this.estrategiaService.obtenerScriptsDisponibles()
       .subscribe((scripts: any) => {
         if (scripts.code === 200) {
-          this.scripts = scripts.data;
+          this.scripts = scripts.data.map(script => {
+            script.selected = false;
+            return script;
+          });
         }
       });    
   }
@@ -163,10 +167,10 @@ export class EstrategiaDialogComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      const result2 = new Script(result.cantEjecuciones, '', result.scriptFile);
+      /*const result2 = new Script(result.cantEjecuciones, '', result.scriptFile);
       this.scriptsDefinitivos.push(result2);
       this.scripts.push(result2);
-      console.log('The dialog was closed', result);
+      console.log('The dialog was closed', result);*/
     });
   }
 
@@ -174,8 +178,39 @@ export class EstrategiaDialogComponent implements OnInit {
     console.log('EVENT :', event);
   }
 
+  setScriptsChecked(script:any) {
+    this.scripts.forEach(s => {
+      if(s.id_script === script.id_script) {
+        s.selected = !s.selected;
+      }
+    });
+  }
+
   guardarPrueba() {
-    const matrizPrueba = new MatrizPrueba('chrome', '1028');
+
+    // Organizar la estrategia
+    console.log(this.scripts);
+    let estrategia = new Estrategia(this.selectedApp, this.nombreEstartegia,[]);
+    let pruebas : Prueba[] = [];
+    // Organizar las pruebas
+    console.log(this.testTypes);
+    for(let prueba of this.testTypes) {
+      if(prueba.isTestSelected && prueba.isToolSelected) {
+        // Obtener los scripts para la prueba
+        let scriptsDefinitivos = this.scripts.map(script => {
+          if(script.id_tipo_prueba_herramienta === prueba.id_tipo_prueba_herramienta && script.selected) {
+            return new Script(parseInt(script.cant_ejecuciones), script.descripcion, script.script_file,script.id_tipo_prueba_herramienta);
+          }
+        }).filter(resp => resp !== undefined);
+        let nuevaPrueba = new Prueba(this.tipoSeleccionado,'',0, moment().format('YYYY-MM-DD HH:mm:ss'),null,'pendiente',0,prueba.id_tipo_prueba_herramienta,
+        scriptsDefinitivos,null,[]);
+        nuevaPrueba.cantidad_ejecuciones = scriptsDefinitivos.length > 0 ? 0 : 1;
+        console.log('NUEVA PRUEBA ', nuevaPrueba)
+      }
+    }
+
+
+    /*const matrizPrueba = new MatrizPrueba('chrome', '1028');
     const estrategia = new Estrategia(this.selectedApp, this.nombreEstartegia);
     const prueba = new Prueba(this.testTypes[0].id, this.testTypes[0], this.tipoSeleccionado,
       '', 0, 0, '2020-03-29', null, 'pendiente', 0, this.scriptsDefinitivos,
@@ -188,6 +223,6 @@ export class EstrategiaDialogComponent implements OnInit {
         this.router.navigate(['/']);
       }, (error) => {
         console.log(error);
-      })
+      })*/
   }
 }
