@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DashboardComponent } from '../dashboard/dashboard.component';
 import { AgregarScriptDialogComponent } from '../agregar-script-dialog/agregar-script-dialog.component';
 import { Script } from 'src/app/models/script.model';
@@ -19,66 +19,54 @@ export class EstrategiaDialogComponent implements OnInit {
   show: boolean = false;
   selectedApp = 0;
   selectedVersion = '';
-  radioHeadful= 'headful';
-  apps = [
-    {id: 1, name: 'Habitica Web'},
-    {id: 2, name: 'Habitica Móvil'}
-  ];
-  versions: Object = {
-    1: ['8.5', '9.0'],
-    2: ['beta', 'alpha']
-  };
-  testTypes = [
-    {
-      id: 'E2E', 
-      isSelected: false,
-      tools: [
-        {id: 'Cypress', isSelected: false, isDisabled: true},
-      ]
-    },
-    {
-      id: 'Random', 
-      isSelected: false,
-      tools: [
-        {id: 'Cypress', isSelected: false, isDisabled: true},
-        {id: 'Calabash', isSelected: false, isDisabled: true}
-      ]
-    },
-    {
-      id: 'BDT', 
-      isSelected: false, 
-      tools: [
+  radioHeadful = 'headful';
+  apps = [];
+  versions = [];
+  testTypes = [];
+  tools = [];
+  tipoApp = '';
 
-      ]
-    }
-  ];
-  tools = [
-    //{id: 'Cypress', isSelected: false, isDisabled: true},
-    //{id: 'Puppeteer', isSelected: false, isDisabled: true},
-    //{id: 'Cucumber', isSelected: false, isDisabled: true},
-    //{id: 'Calabash', isSelected: false, isDisabled: true}
-  ];
-  testTypesChecked = [];
-  toolsChecked = [];
-  sections = [];
-  scripts : any[] = [
-    {descripcion: 'Prueba login', cant_ejecuciones: '30'},
-    {descripcion: 'Prueba registro', cant_ejecuciones: '50'}
-  ];
+  Isection = {
+    text: '',
+    scripts: []
+  }
+
+  sections: Isection[] = []
+  scripts = [];
+  matriz = [];
 
   scriptsDefinitivos: Script[] = [];
 
   tipoSeleccionado = 'Headful';
-    
+
 
   constructor(
     public dialogRef: MatDialogRef<DashboardComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     public dialog: MatDialog, private estrategiaService: EstrategiaService,
     private router: Router) { }
-  
+
   ngOnInit() {
-    console.log('ESTE ES EL CONTENIDO QUE VIENE : ', this.data);
+    this.estrategiaService.obtenerAplicaciones()
+      .subscribe((apps: any) => {
+        if (apps.code === 200) {
+          this.apps = apps.data;
+        }
+      });
+
+    this.estrategiaService.obtenerScriptsDisponibles()
+      .subscribe((scripts: any) => {
+        if (scripts.code === 200) {
+          this.scripts = scripts.data;
+        }
+      });
+
+    this.estrategiaService.obtenerMatriz(this.tipoApp)
+      .subscribe((m: any) => {
+        if (m.code === 200) {
+          this.matriz = m.data;
+        }
+      });
   }
 
   close(): void {
@@ -86,74 +74,58 @@ export class EstrategiaDialogComponent implements OnInit {
   }
 
   openSections(): void {
-    this.show = true;
-    let section = '';
+    this.testTypes.forEach(test => {
+      if ((test.isTestSelected && test.isToolSelected)) {
+        let a = {
+          text: test.tipo_prueba + '-' + test.herramienta,
+          scripts: []
+        };
+        console.log("a " + JSON.stringify(a));
 
-    // E2E
-    const indexE2E = this.testTypesChecked.findIndex(x => x == 'E2E');
-    const indexCypress = this.toolsChecked.findIndex(x => x == 'Cypress');
-    const indexPuppeteer = this.toolsChecked.findIndex(x => x == 'Puppeteer');
-    if (indexE2E != -1 && indexCypress != -1) {
-      section = this.testTypesChecked[indexE2E] + '-' + this.toolsChecked[indexCypress];
-      this.sections.push(section);
-    }
-    if (indexE2E != -1 && indexPuppeteer != -1) {
-      section = this.testTypesChecked[indexE2E] + '-' + this.toolsChecked[indexPuppeteer];
-      this.sections.push(section);
-    }
+        this.scripts.forEach(script => {
+          if (script.id_tipo_prueba_herramienta == test.id_tipo_prueba_herramienta) {
+            console.log("script id " + script.id_tipo_prueba_herramienta);
+            a.scripts.push(script);
+          }
+        });
 
-    //RANDOM
-    const indexRandom = this.testTypesChecked.findIndex(x => x == 'Random');
-    if (indexRandom != -1) {
-      this.sections.push(this.testTypesChecked[indexRandom]);
-    }
+        this.sections.push(a);
+        this.show = true;
 
-    //BDT
-    const indexBDT = this.testTypesChecked.findIndex(x => x == 'BDT');
-    const indexCucumber = this.toolsChecked.findIndex(x => x == 'Cucumber');
-    const indexCalabash = this.toolsChecked.findIndex(x => x == 'Calabash');
-    if (indexBDT != -1 && indexCucumber != -1) {
-      section = this.testTypesChecked[indexBDT] + '-' + this.toolsChecked[indexCucumber];
-      this.sections.push(section);
-    }
-    if (indexBDT != -1 && indexCalabash != -1) {
-      section = this.testTypesChecked[indexBDT] + '-' + this.toolsChecked[indexCalabash];
-      this.sections.push(section);
-    }
-    console.log("CONTENIDO DE LAS SECCIONES"+ JSON.stringify(this.sections));
+      }
+    });
+
+    console.log("CONTENIDO DE LAS SECCIONES" + JSON.stringify(this.sections));
   }
 
   setTypesChecked(type): void {
-    const index = this.testTypes.findIndex(x => x.id == type.id);
-    this.testTypes[index].isSelected = type.isSelected;
-    this.tools = [];
-    this.testTypes.forEach( test => {
-      if(test.isSelected) {
-        this.tools =  this.tools.concat(test.tools);
-      }
-    });
-    console.log(this.tools);
-
-    const indexNewArray = this.testTypesChecked.findIndex(x => x == type.id);
-    if (indexNewArray != -1 && !type.isSelected) {
-      this.testTypesChecked.splice(indexNewArray, 1);
-    } else {
-      this.testTypesChecked.push(type.id);
+    const index = this.testTypes.findIndex(x => x.id_tipo_prueba_herramienta == type.id_tipo_prueba_herramienta);
+    const indexTool = this.tools.findIndex(x => x == type.herramienta);
+    this.testTypes[index].isTestSelected = type.isTestSelected;
+    if (type.tipo_prueba == 'RANDOM') {
+      this.testTypes[index].isToolSelected = type.isTestSelected;
     }
-    this.verificarContenido1();    
+
+    if (type.tipo_prueba != 'RANDOM' && type.isTestSelected && indexTool == -1 && this.testTypes[index].herramienta != null) {
+      this.tools.push(type.herramienta);
+    } else if (type.tipo_prueba != 'RANDOM' && !type.isTestSelected && indexTool != -1) {
+      this.tools.splice(indexTool, 1);
+    }
+    console.log("TOOLS" + JSON.stringify(this.tools));
+
+    this.verificarContenido1();
   }
 
-  setToolsChecked(tool): void{
-    const index = this.tools.findIndex(x => x.id == tool.id);
-    this.tools[index].isSelected = tool.isSelected;
-
-    const indexNewArray = this.toolsChecked.findIndex(x => x == tool.id);
-    if (indexNewArray != -1 && !tool.isSelected) {
-      this.toolsChecked.splice(indexNewArray, 1);
+  setToolsChecked(tool): void {
+    const index = this.testTypes.findIndex(x => x.herramienta == tool);
+    if (!this.testTypes[index].isToolSelected) {
+      this.testTypes[index].isToolSelected = true;
     } else {
-      this.toolsChecked.push(tool.id);
+      this.testTypes[index].isToolSelected = false;
     }
-    this.verificarContenido1()    
+    console.log("TYPES" + JSON.stringify(this.testTypes));
+
+    this.verificarContenido1()
   }
 
   seleccionarTipo(evt: any) {
@@ -162,14 +134,31 @@ export class EstrategiaDialogComponent implements OnInit {
   }
 
   verificarContenido1() {
-    if(this.nombreEstartegia.length > 4 && this.selectedApp > 0 
-      && this.selectedVersion.length > 0 && this.testTypesChecked.length > 0
-      && this.toolsChecked.length > 0
-      ) {
-        this.contenido1Valido = true;
-      } else {
-        this.contenido1Valido = false;
-      }
+    if (this.nombreEstartegia.length > 4 && this.selectedApp > 0
+      && this.selectedVersion.length > 0 && this.tools.length > 0
+    ) {
+      this.contenido1Valido = true;
+    } else {
+      this.contenido1Valido = false;
+    }
+  }
+
+  llenarVersionesYherramientas() {
+    if (this.selectedApp > 0) {
+      const index = this.apps.findIndex(x => x.id_aplicacion == this.selectedApp);
+      this.versions = this.apps[index].versions;
+      this.tipoApp = this.apps[index].tipo;
+      this.estrategiaService.obtenerTiposPruebaYherramientas(this.tipoApp)
+        .subscribe((pruebas_herramientas: any) => {
+          if (pruebas_herramientas.code === 200) {
+            this.testTypes = pruebas_herramientas.data;
+            this.testTypes.forEach(test => {
+              test.isTestSelected = false;
+              test.isToolSelected = false;
+            });
+          }
+        })
+    }
   }
 
   openScriptModal() {
@@ -193,16 +182,16 @@ export class EstrategiaDialogComponent implements OnInit {
   guardarPrueba() {
     const matrizPrueba = new MatrizPrueba('chrome', '1028');
     const estrategia = new Estrategia(this.selectedApp, this.nombreEstartegia);
-    const prueba =  new Prueba(this.testTypes[0].id, this.toolsChecked[0],this.tipoSeleccionado,
+    const prueba = new Prueba(this.testTypes[0].id, this.testTypes[0], this.tipoSeleccionado,
       '', 0, 0, '2020-03-29', null, 'pendiente', 0, this.scriptsDefinitivos,
       matrizPrueba, []);
-    const estrategiaEnvio = new EstrategiaEnvio(estrategia,[prueba]);
+    const estrategiaEnvio = new EstrategiaEnvio(estrategia, [prueba]);
     console.log(estrategiaEnvio);
     this.estrategiaService.guardarEstrategia(estrategiaEnvio)
-      .subscribe( resp => {
+      .subscribe(resp => {
         console.log(resp);
         this.router.navigate(['/']);
-      }, (error) => { 
+      }, (error) => {
         console.log(error);
       })
   }

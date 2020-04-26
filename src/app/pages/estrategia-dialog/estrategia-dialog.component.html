@@ -21,19 +21,19 @@
                   <div class="form-group">
                     <label class="form-control-label" for="app">Aplicación</label>
                     <select class="form-control form-control-alternative" id="app" [(ngModel)]="selectedApp" name="app"
-                      required (ngModelChange)="verificarContenido1()">
+                      required (ngModelChange)="verificarContenido1();llenarVersionesYherramientas()">
                       <option value="" [selected]=true [disabled]="true">Selecciona una aplicación</option>
-                      <option *ngFor="let app of apps" [value]="app.id">{{app.name}}</option>
+                      <option *ngFor="let app of apps" [value]="app.id_aplicacion">{{app.nombre}}</option>
                     </select>
                   </div>
                 </div>
                 <div class="col-lg-6">
                   <div class="form-group">
                     <label class="form-control-label" for="version">Versión</label>
-                    <select class="form-control form-control-alternative" id="version" [(ngModel)]="selectedVersion" name="version" [disabled]="selectedApp == ''" 
+                    <select class="form-control form-control-alternative" id="version" [(ngModel)]="selectedVersion" name="version" [disabled]="selectedApp == ''"
                     required (ngModelChange)="verificarContenido1()">
                       <option value="" [selected]=true [disabled]="true">Selecciona una version</option>
-                      <option *ngFor="let version of versions[selectedApp]" [value]="version">{{version}}</option>
+                      <option *ngFor="let version of versions" [value]="version.id_version">{{version.version}}</option>
                     </select>
                   </div>
                 </div>
@@ -43,8 +43,8 @@
                   <div class="form-group">
                     <label class="form-control-label">Tipo(s) de prueba</label>
                     <div *ngFor="let type of testTypes" class="custom-control custom-checkbox mb-3">
-                      <input class="custom-control-input" id="{{type.id}}" type="checkbox" value="type" [(ngModel)]="type.isSelected" name="type" (change)="setTypesChecked(type)">
-                      <label class="custom-control-label" for="{{type.id}}">{{type.id}}</label>
+                      <input class="custom-control-input" id="{{type.id_tipo_prueba_herramienta}}" type="checkbox" value="type" [(ngModel)]="type.isTestSelected" name="type" (change)="setTypesChecked(type)">
+                      <label class="custom-control-label" for="{{type.id_tipo_prueba_herramienta}}">{{type.tipo_prueba}}</label>
                     </div>
                   </div>
                 </div>
@@ -52,8 +52,8 @@
                   <div class="form-group">
                     <label class="form-control-label">Herramienta(s)</label>
                     <div *ngFor="let tool of tools" class="custom-control custom-checkbox mb-3">
-                      <input class="custom-control-input" id="{{tool.id}}" type="checkbox" value="tool" [(ngModel)]="tool.isSelected" name="tool" (change)="setToolsChecked(tool)">
-                      <label class="custom-control-label" for="{{tool.id}}">{{tool.id}}</label>
+                      <input class="custom-control-input" id="{{tool}}" type="checkbox" value="tool" name="tool" (change)="setToolsChecked(tool)">
+                      <label class="custom-control-label" for="{{tool}}">{{tool}}</label>
                     </div>
                   </div>
                 </div>
@@ -72,7 +72,7 @@
       <div *ngIf="show" class="row">
         <div class="card shadow mb-5" *ngFor="let section of sections">
           <div class="card-header border-0 d-flex justify-content-between">
-            <h3 class="mb-0">{{section}}</h3>
+            <h3 class="mb-0">{{section.text}}</h3>
             <button class="btn btn-danger">Eliminar</button>
           </div>
           <div>
@@ -88,7 +88,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let script of scripts; let i = index">
+                  <tr *ngFor="let script of section.scripts; let i = index">
                     <td>
                       <div class="custom-control custom-checkbox mb-3">
                         <input class="custom-control-input" id="{{i}}" type="checkbox" value="script">
@@ -104,10 +104,10 @@
                   </tr>
                 </tbody>
               </table>
-            </div>            
+            </div>
             <div class="align-self-end mt-2 mr-6 ml-auto">
               <button type="button" class="btn btn-default btn-sm" (click)="openScriptModal()">Agregar script</button>
-            </div>            
+            </div>
             <div class="container mt-7 ml-3 mb-5">
               <div class="custom-control custom-radio mb-3 col-lg-2">
                 <input name="custom-radio-2" class="custom-control-input" id="headful" value="Headful" type="radio" checked="" (change)="seleccionarTipo($event)">
@@ -191,6 +191,6 @@
           <button type="button" class="btn btn-default btn-lg btn-block" (click)="guardarPrueba()">Lanzar pruebas</button>
         </div>
       </div>
-    </div>    
+    </div>
   </div>
 </div>
