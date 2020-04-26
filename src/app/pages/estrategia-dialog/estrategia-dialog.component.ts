@@ -26,12 +26,7 @@ export class EstrategiaDialogComponent implements OnInit {
   tools = [];
   tipoApp = '';
 
-  Isection = {
-    text: '',
-    scripts: []
-  }
-
-  sections: Isection[] = []
+  sections = []
   scripts = [];
   matriz = [];
 
@@ -59,14 +54,7 @@ export class EstrategiaDialogComponent implements OnInit {
         if (scripts.code === 200) {
           this.scripts = scripts.data;
         }
-      });
-
-    this.estrategiaService.obtenerMatriz(this.tipoApp)
-      .subscribe((m: any) => {
-        if (m.code === 200) {
-          this.matriz = m.data;
-        }
-      });
+      });    
   }
 
   close(): void {
@@ -90,8 +78,15 @@ export class EstrategiaDialogComponent implements OnInit {
         });
 
         this.sections.push(a);
-        this.show = true;
 
+        this.estrategiaService.obtenerMatriz(this.tipoApp)
+        .subscribe((m: any) => {
+          if (m.code === 200) {
+            this.matriz = m.data;
+          }
+        });
+
+        this.show = true;
       }
     });
 

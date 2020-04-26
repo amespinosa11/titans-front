@@ -21,7 +21,6 @@ export class EstrategiaService {
   }
 
   obtenerScriptsDisponibles() {
-    console.log(`${environment.endpointsUrl}/testingTool/getAllScripts`);
     return this.http.get(`${environment.endpointsUrl}/testingTool/getAllScripts`);
   }
 
