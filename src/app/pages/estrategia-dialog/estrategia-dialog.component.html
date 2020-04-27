@@ -125,42 +125,24 @@
                 <thead class="thead-light">
                   <tr>
                     <th scope="col"></th>
-                    <th scope="col">1024×768</th>
-                    <th scope="col">1280×1024</th>
+                    <th scope="col" *ngFor="let resolucion of resoluciones">{{resolucion}}</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
+                  <tr *ngFor="let navegador of navegadores; let i = index">
                     <th scope="row">
-                      Chrome
+                      {{navegador}}
                     </th>
                     <td>
                       <div class="custom-control custom-checkbox mb-3">
-                        <input class="custom-control-input" id="resolucionChrome1" type="checkbox" value="script">
-                        <label class="custom-control-label" for="resolucionChrome1"></label>
+                        <input class="custom-control-input" id="resolucion1" type="checkbox" value="navegador">
+                        <label class="custom-control-label" for="resolucion1"></label>
                       </div>
                     </td>
                     <td>
                       <div class="custom-control custom-checkbox mb-3">
-                        <input class="custom-control-input" id="resolucionChrome2" type="checkbox" value="script">
-                        <label class="custom-control-label" for="resolucionChrome2"></label>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th scope="row">
-                      Firefox
-                    </th>
-                    <td>
-                      <div class="custom-control custom-checkbox mb-3">
-                        <input class="custom-control-input" id="resolucionFirefox1" type="checkbox" value="script">
-                        <label class="custom-control-label" for="resolucionFirefox1"></label>
-                      </div>
-                    </td>
-                    <td>
-                      <div class="custom-control custom-checkbox mb-3">
-                        <input class="custom-control-input" id="resolucionFirefox2" type="checkbox" value="script">
-                        <label class="custom-control-label" for="resolucionFirefox2"></label>
+                        <input class="custom-control-input" id="resolucion2" type="checkbox" value="navegador">
+                        <label class="custom-control-label" for="resolucion2"></label>
                       </div>
                     </td>
                   </tr>

@@ -30,6 +30,8 @@ export class EstrategiaDialogComponent implements OnInit {
   sections = []
   scripts = [];
   matriz = [];
+  navegadores = [];
+  resoluciones = [];
 
   scriptsDefinitivos = {};
 
@@ -58,7 +60,7 @@ export class EstrategiaDialogComponent implements OnInit {
             return script;
           });
         }
-      });    
+      });
   }
 
   close(): void {
@@ -83,12 +85,23 @@ export class EstrategiaDialogComponent implements OnInit {
 
         this.sections.push(a);
 
-        this.estrategiaService.obtenerMatriz(this.tipoApp)
-        .subscribe((m: any) => {
-          if (m.code === 200) {
-            this.matriz = m.data;
+        //llenar navegadores y resoluciones
+        console.log("MATRIZ" + JSON.stringify(this.matriz));
+        this.matriz.forEach(mat => {
+          const indexNavegador = this.navegadores.findIndex(x => x == mat.navegador);
+          const indexResolucion = this.resoluciones.findIndex(x => x == mat.resolucion);
+
+          if (indexNavegador == -1) {
+            this.navegadores.push(mat.navegador);
+          }
+
+          if (indexResolucion == -1) {
+            this.resoluciones.push(mat.resolucion);
           }
         });
+
+        console.log("NAVEGADORES" + JSON.stringify(this.navegadores));
+        console.log("RESOLUCIONES" + JSON.stringify(this.resoluciones));
 
         this.show = true;
       }
@@ -156,7 +169,14 @@ export class EstrategiaDialogComponent implements OnInit {
               test.isToolSelected = false;
             });
           }
-        })
+        });
+
+      this.estrategiaService.obtenerMatriz(this.tipoApp)
+        .subscribe((m: any) => {
+          if (m.code === 200) {
+            this.matriz = m.data;
+          }
+        });
     }
   }
 
@@ -178,9 +198,9 @@ export class EstrategiaDialogComponent implements OnInit {
     console.log('EVENT :', event);
   }
 
-  setScriptsChecked(script:any) {
+  setScriptsChecked(script: any) {
     this.scripts.forEach(s => {
-      if(s.id_script === script.id_script) {
+      if (s.id_script === script.id_script) {
         s.selected = !s.selected;
       }
     });
@@ -190,20 +210,20 @@ export class EstrategiaDialogComponent implements OnInit {
 
     // Organizar la estrategia
     console.log(this.scripts);
-    let estrategia = new Estrategia(this.selectedApp, this.nombreEstartegia,[]);
-    let pruebas : Prueba[] = [];
+    let estrategia = new Estrategia(this.selectedApp, this.nombreEstartegia, []);
+    let pruebas: Prueba[] = [];
     // Organizar las pruebas
     console.log(this.testTypes);
-    for(let prueba of this.testTypes) {
-      if(prueba.isTestSelected && prueba.isToolSelected) {
+    for (let prueba of this.testTypes) {
+      if (prueba.isTestSelected && prueba.isToolSelected) {
         // Obtener los scripts para la prueba
         let scriptsDefinitivos = this.scripts.map(script => {
-          if(script.id_tipo_prueba_herramienta === prueba.id_tipo_prueba_herramienta && script.selected) {
-            return new Script(parseInt(script.cant_ejecuciones), script.descripcion, script.script_file,script.id_tipo_prueba_herramienta);
+          if (script.id_tipo_prueba_herramienta === prueba.id_tipo_prueba_herramienta && script.selected) {
+            return new Script(parseInt(script.cant_ejecuciones), script.descripcion, script.script_file, script.id_tipo_prueba_herramienta);
           }
         }).filter(resp => resp !== undefined);
-        let nuevaPrueba = new Prueba(this.tipoSeleccionado,'',0, moment().format('YYYY-MM-DD HH:mm:ss'),null,'pendiente',0,prueba.id_tipo_prueba_herramienta,
-        scriptsDefinitivos,null,[]);
+        let nuevaPrueba = new Prueba(this.tipoSeleccionado, '', 0, moment().format('YYYY-MM-DD HH:mm:ss'), null, 'pendiente', 0, prueba.id_tipo_prueba_herramienta,
+          scriptsDefinitivos, null, []);
         nuevaPrueba.cantidad_ejecuciones = scriptsDefinitivos.length > 0 ? 0 : 1;
         console.log('NUEVA PRUEBA ', nuevaPrueba)
       }
