@@ -37,7 +37,8 @@ export class EstrategiaDialogComponent implements OnInit {
 
   tipoSeleccionado = 'Headful';
 
-
+  matrizPorHerramienta = {};
+  
   constructor(
     public dialogRef: MatDialogRef<DashboardComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -206,10 +207,46 @@ export class EstrategiaDialogComponent implements OnInit {
     });
   }
 
+  setNavegador1(tool,navegador,num) {
+    for (let prueba of this.testTypes) {
+      if(`${prueba.tipo_prueba}-${prueba.herramienta}` === tool.text) {
+        if(this.matrizPorHerramienta[prueba.id_tipo_prueba_herramienta] !== undefined) {
+          let obj;
+          for(let navegadorP of this.matrizPorHerramienta[prueba.id_tipo_prueba_herramienta]) {
+            if(navegadorP.navegador === navegador) {
+              navegadorP[num] = navegadorP[num] !== undefined ? !navegadorP[num] : true;
+            } else {
+              obj = {
+                navegador : navegador
+              }
+              obj[num] = true;
+              
+            }
+          }
+
+          if(obj !== undefined && this.matrizPorHerramienta[prueba.id_tipo_prueba_herramienta].length < 2) {
+            this.matrizPorHerramienta[prueba.id_tipo_prueba_herramienta].push(obj)
+            obj = undefined;
+          }
+        }
+        else {
+          let obj = {
+            navegador : navegador
+          }
+          obj[num] = true;
+          this.matrizPorHerramienta[prueba.id_tipo_prueba_herramienta] = [];
+          this.matrizPorHerramienta[prueba.id_tipo_prueba_herramienta].push(obj);
+        }
+      }
+    }
+    console.log('prueba', this.matrizPorHerramienta);
+  }
+
   guardarPrueba() {
 
     // Organizar la estrategia
     console.log(this.scripts);
+    console.log(this.navegadores);
     let estrategia = new Estrategia(this.selectedApp, this.nombreEstartegia, []);
     let pruebas: Prueba[] = [];
     // Organizar las pruebas
@@ -222,21 +259,28 @@ export class EstrategiaDialogComponent implements OnInit {
             return new Script(parseInt(script.cant_ejecuciones), script.descripcion, script.script_file, script.id_tipo_prueba_herramienta);
           }
         }).filter(resp => resp !== undefined);
+        let matricesSeleccionadas = [];
+        // Obtener las matrices de prueba.
+        for(let matriz of this.matrizPorHerramienta[prueba.id_tipo_prueba_herramienta]) {
+          if(matriz['0'] !== undefined && matriz['0']) {
+            matricesSeleccionadas.push(new MatrizPrueba(prueba.tipo_aplicacion, matriz.navegador, '1024 X 768'));
+          }
+          if(matriz['1'] !== undefined && matriz['1']) {
+            matricesSeleccionadas.push(new MatrizPrueba(prueba.tipo_aplicacion, matriz.navegador, '1366 X 768'));
+          }
+        }
+
         let nuevaPrueba = new Prueba(this.tipoSeleccionado, '', 0, moment().format('YYYY-MM-DD HH:mm:ss'), null, 'pendiente', 0, prueba.id_tipo_prueba_herramienta,
-          scriptsDefinitivos, null, []);
+          scriptsDefinitivos, matricesSeleccionadas, []);
         nuevaPrueba.cantidad_ejecuciones = scriptsDefinitivos.length > 0 ? 0 : 1;
-        console.log('NUEVA PRUEBA ', nuevaPrueba)
+        pruebas.push(nuevaPrueba);
       }
     }
 
+    estrategia.pruebas = pruebas;
+    console.log('ESTRATEGIA : ', estrategia);
 
-    /*const matrizPrueba = new MatrizPrueba('chrome', '1028');
-    const estrategia = new Estrategia(this.selectedApp, this.nombreEstartegia);
-    const prueba = new Prueba(this.testTypes[0].id, this.testTypes[0], this.tipoSeleccionado,
-      '', 0, 0, '2020-03-29', null, 'pendiente', 0, this.scriptsDefinitivos,
-      matrizPrueba, []);
-    const estrategiaEnvio = new EstrategiaEnvio(estrategia, [prueba]);
-    console.log(estrategiaEnvio);
+    /*
     this.estrategiaService.guardarEstrategia(estrategiaEnvio)
       .subscribe(resp => {
         console.log(resp);

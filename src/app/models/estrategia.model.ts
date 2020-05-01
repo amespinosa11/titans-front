@@ -32,7 +32,7 @@ export class Prueba {
     tiempo_ejecucion: number;
     id_tipo_herramienta_prueba: number;
     scripts: Script[]; 
-    matrizPrueba: MatrizPrueba;
+    matrizPrueba: MatrizPrueba[];
     parametros: Parametro[];
 
     constructor(
@@ -45,7 +45,7 @@ export class Prueba {
         tiempo_ejecucion: number,
         id_tipo_herramienta_prueba: number,
         scripts: Script[],
-        matrizPrueba: MatrizPrueba,
+        matrizPrueba: MatrizPrueba[],
         parametros: Parametro[],
     ) {
         this.modo =  modo;

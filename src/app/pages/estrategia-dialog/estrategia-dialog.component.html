@@ -17,7 +17,7 @@
                 </div>
               </div>
               <div class="row">
-                <div class="col-lg-6">
+                <div class="col-lg-12">
                   <div class="form-group">
                     <label class="form-control-label" for="app">Aplicación</label>
                     <select class="form-control form-control-alternative" id="app" [(ngModel)]="selectedApp" name="app"
@@ -27,7 +27,7 @@
                     </select>
                   </div>
                 </div>
-                <div class="col-lg-6">
+                <div class="col-lg-12">
                   <div class="form-group">
                     <label class="form-control-label" for="version">Versión</label>
                     <select class="form-control form-control-alternative" id="version" [(ngModel)]="selectedVersion" name="version" [disabled]="selectedApp == ''"
@@ -129,20 +129,20 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let navegador of navegadores; let i = index">
+                  <tr *ngFor="let navegador of navegadores; index as j">
                     <th scope="row">
                       {{navegador}}
                     </th>
                     <td>
                       <div class="custom-control custom-checkbox mb-3">
-                        <input class="custom-control-input" id="resolucion1" type="checkbox" value="navegador">
-                        <label class="custom-control-label" for="resolucion1"></label>
+                        <input class="custom-control-input" id="{{j}}.1" type="checkbox" value="navegador" (change)="setNavegador1(section,navegador,0)">
+                        <label class="custom-control-label" for="{{j}}.1"></label>
                       </div>
                     </td>
                     <td>
                       <div class="custom-control custom-checkbox mb-3">
-                        <input class="custom-control-input" id="resolucion2" type="checkbox" value="navegador">
-                        <label class="custom-control-label" for="resolucion2"></label>
+                        <input class="custom-control-input" id="{{j}}.2" type="checkbox" value="navegador" (change)="setNavegador1(section,navegador,1)">
+                        <label class="custom-control-label" for="{{j}}.2"></label>
                       </div>
                     </td>
                   </tr>
