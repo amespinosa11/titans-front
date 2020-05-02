@@ -20,6 +20,7 @@ import { DashboardService } from 'src/app/services/dashboard/dashboard.service';
 export class DashboardComponent implements OnInit {
 
   estadisticas: any;
+  estrategiasGenerales = [];
 
   constructor(public estrategiaDialog: MatDialog, private dashboardService: DashboardService) {
     this.estadisticas = {
@@ -39,6 +40,12 @@ export class DashboardComponent implements OnInit {
           this.estadisticas = estadisticas.data;
         }
       })
+
+    this.dashboardService.obtenerEstrategiasGeneral()
+      .subscribe( (estrategias: any) => {
+        this.estrategiasGenerales = estrategias;
+        console.log(estrategias);
+      });
   }
 
   openDialog(): void {

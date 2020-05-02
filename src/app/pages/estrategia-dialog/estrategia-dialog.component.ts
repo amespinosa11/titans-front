@@ -75,11 +75,9 @@ export class EstrategiaDialogComponent implements OnInit {
           text: test.tipo_prueba + '-' + test.herramienta,
           scripts: []
         };
-        console.log("a " + JSON.stringify(a));
 
         this.scripts.forEach(script => {
           if (script.id_tipo_prueba_herramienta == test.id_tipo_prueba_herramienta) {
-            console.log("script id " + script.id_tipo_prueba_herramienta);
             a.scripts.push(script);
           }
         });
@@ -87,7 +85,6 @@ export class EstrategiaDialogComponent implements OnInit {
         this.sections.push(a);
 
         //llenar navegadores y resoluciones
-        console.log("MATRIZ" + JSON.stringify(this.matriz));
         this.matriz.forEach(mat => {
           const indexNavegador = this.navegadores.findIndex(x => x == mat.navegador);
           const indexResolucion = this.resoluciones.findIndex(x => x == mat.resolucion);
@@ -97,18 +94,14 @@ export class EstrategiaDialogComponent implements OnInit {
           }
 
           if (indexResolucion == -1) {
-            this.resoluciones.push(mat.resolucion);
+            if(this.resoluciones.indexOf(mat.resolucion.toLowerCase()) === -1) this.resoluciones.push(mat.resolucion)
           }
         });
-
-        console.log("NAVEGADORES" + JSON.stringify(this.navegadores));
-        console.log("RESOLUCIONES" + JSON.stringify(this.resoluciones));
 
         this.show = true;
       }
     });
 
-    console.log("CONTENIDO DE LAS SECCIONES" + JSON.stringify(this.sections));
   }
 
   setTypesChecked(type): void {
@@ -124,7 +117,6 @@ export class EstrategiaDialogComponent implements OnInit {
     } else if (type.tipo_prueba != 'RANDOM' && !type.isTestSelected && indexTool != -1) {
       this.tools.splice(indexTool, 1);
     }
-    console.log("TOOLS" + JSON.stringify(this.tools));
 
     this.verificarContenido1();
   }
@@ -136,14 +128,12 @@ export class EstrategiaDialogComponent implements OnInit {
     } else {
       this.testTypes[index].isToolSelected = false;
     }
-    console.log("TYPES" + JSON.stringify(this.testTypes));
 
     this.verificarContenido1()
   }
 
   seleccionarTipo(evt: any) {
     this.tipoSeleccionado = evt.target.value;
-    console.log('TIPO SELECCIONADO: ', this.tipoSeleccionado);
   }
 
   verificarContenido1() {
@@ -181,22 +171,32 @@ export class EstrategiaDialogComponent implements OnInit {
     }
   }
 
-  openScriptModal() {
+  openScriptModal(section) {
+    let idTipoPruebaHerramienta = 0;
+    for(let test of this.testTypes) {
+      if(section.text === `${test.tipo_prueba}-${test.herramienta}`) {
+        idTipoPruebaHerramienta = test.id_tipo_prueba_herramienta;
+      }
+    }
     const dialogRef = this.dialog.open(AgregarScriptDialogComponent, {
-      width: '50%',
-      height: '65%'
+      width: '60%',
+      height: '80%'
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      /*const result2 = new Script(result.cantEjecuciones, '', result.scriptFile);
-      this.scriptsDefinitivos.push(result2);
+      const result2 = {
+        cant_ejecuciones : result.cantEjecuciones < 0 ? 1 : result.cantEjecuciones,
+        descripcion: result.descripcion.split(' ').join(''),
+        script_file: result.scriptFile,
+        id_tipo_prueba_herramienta: idTipoPruebaHerramienta,
+        selected : false
+      }
       this.scripts.push(result2);
-      console.log('The dialog was closed', result);*/
+      section.scripts.push(result2);
     });
   }
 
   onScriptChange(event) {
-    console.log('EVENT :', event);
   }
 
   setScriptsChecked(script: any) {
@@ -239,18 +239,13 @@ export class EstrategiaDialogComponent implements OnInit {
         }
       }
     }
-    console.log('prueba', this.matrizPorHerramienta);
   }
 
   guardarPrueba() {
-
     // Organizar la estrategia
-    console.log(this.scripts);
-    console.log(this.navegadores);
     let estrategia = new Estrategia(this.selectedApp, this.nombreEstartegia, []);
     let pruebas: Prueba[] = [];
     // Organizar las pruebas
-    console.log(this.testTypes);
     for (let prueba of this.testTypes) {
       if (prueba.isTestSelected && prueba.isToolSelected) {
         // Obtener los scripts para la prueba
@@ -278,15 +273,14 @@ export class EstrategiaDialogComponent implements OnInit {
     }
 
     estrategia.pruebas = pruebas;
-    console.log('ESTRATEGIA : ', estrategia);
 
-    /*
-    this.estrategiaService.guardarEstrategia(estrategiaEnvio)
+    this.estrategiaService.guardarEstrategia(estrategia)
       .subscribe(resp => {
         console.log(resp);
+        this.dialogRef.close();
         this.router.navigate(['/']);
       }, (error) => {
         console.log(error);
-      })*/
+      })
   }
 }

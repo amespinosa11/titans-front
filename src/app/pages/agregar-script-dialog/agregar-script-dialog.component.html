@@ -11,6 +11,10 @@
       <label>Script</label>
       <input type="file" accept=".js" class="form-control form-control-alternative" (change)="onFileChange($event)">
     </div>
+    <div class="form-group">
+      <label>Nombre</label>
+      <input type="text" class="form-control form-control-alternative" [(ngModel)]="scriptData.descripcion">
+    </div>
   </div>
   <div class="btn-container">
     <button class="btn btn-danger" (click)="cerrar()">Cancelar</button>

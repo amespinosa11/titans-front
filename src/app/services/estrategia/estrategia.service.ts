@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { EstrategiaEnvio } from 'src/app/models/estrategia.model';
+import { EstrategiaEnvio, Estrategia } from 'src/app/models/estrategia.model';
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +28,7 @@ export class EstrategiaService {
     return this.http.get(`${environment.endpointsUrl}/testingTool/getBrowserMatrices/${tipoApp}`);
   }
 
-  guardarEstrategia(estrategia: EstrategiaEnvio) {
+  guardarEstrategia(estrategia: Estrategia) {
     return this.http.post(`${environment.endpointsUrl}/estrategias`, estrategia);
   }
 }

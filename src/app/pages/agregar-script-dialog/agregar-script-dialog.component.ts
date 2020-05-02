@@ -16,7 +16,8 @@ export class AgregarScriptDialogComponent implements OnInit {
   ngOnInit() {
     this.scriptData = {
       cantEjecuciones: 0,
-      scriptFile: null
+      scriptFile: null,
+      descripcion: ''
     }
   }
 

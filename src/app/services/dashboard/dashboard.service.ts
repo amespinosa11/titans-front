@@ -17,4 +17,8 @@ export class DashboardService {
     return this.http.get(`${environment.endpointsUrl}/estrategias/estadisticas`);
   }
 
+  obtenerEstrategiasGeneral() {
+    return this.http.get(`${environment.endpointsUrl}/estrategias/estragias_general`);
+  }
+
 }
