@@ -2,4 +2,14 @@
 </div>
 
 <div class="container-fluid mt--7">
+
+    <div class="card bg-gradient-default shadow terminal">
+        <div class="my-3 mx-3">
+            <span class="terminal-title">Pruebas Titans ~ </span>
+            <div *ngFor="let log of logs">
+                <pre class="white-text mx-4">{{ log.data | json }}</pre>
+            </div>
+        </div>
+    </div>
+
 </div>
