@@ -11,5 +11,5 @@ import { ResultadosPruebaComponent } from 'src/app/pages/resultados-prueba/resul
 export const AdminLayoutRoutes: Routes = [
     { path: 'dashboard', component: DashboardComponent },
     { path: 'progreso/:idEstrategia', component: ProgresoEstrategiaComponent },
-    { path: 'resumen/:idResultado', component: ResultadosPruebaComponent }
+    { path: 'resumen/:idEstrategia', component: ResultadosPruebaComponent }
 ];

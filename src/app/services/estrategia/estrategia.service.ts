@@ -31,4 +31,8 @@ export class EstrategiaService {
   guardarEstrategia(estrategia: Estrategia) {
     return this.http.post(`${environment.endpointsUrl}/estrategias`, estrategia);
   }
+
+  obtenerResultados(idEstrategia: number) {
+    return this.http.get(`${environment.endpointsUrl}/estrategias/resultado/${idEstrategia}`);
+  }
 }
